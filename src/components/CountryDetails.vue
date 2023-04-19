@@ -42,13 +42,26 @@ export default {
 
     data() {
         return {
-            alpha3Code: this.$route.params.alpha3Code,
-            country: null,
+            alpha3Code: '',
         }
     },
 
-    mounted() {
-        console.log(this.countries)
+    methods: {
+        _getParamsData(){
+            const {alpha3Code} = this.$route.params
+            this.alpha3Code = alpha3Code
+        }
+    },
+
+    created() {
+        this._getParamsData
+
+        this.$watch(
+            () => this.$route.params,
+            () => {
+                this._getParamsData()
+            }
+        )
     },
 
     computed: {
@@ -56,18 +69,10 @@ export default {
             if (this.countries.length === 0) {
                 return {}
             }
-            return this.countries.find(c => c.alpha3Code === this.$route.params.alpha3Code) || {}
+            // return this.countries.find(c => c.alpha3Code === this.$route.params.alpha3Code) || {}
+            return this.countries.find(c => c.alpha3Code === this.alpha3Code) || {}
         }
     },
-
-    watch: {
-        alpha3Code(newValue, oldValue) {
-            console.log(newValue)
-            console.log(oldValue)
-            return this.country = this.countries.find(country => country.alpha3Code === newValue)
-        }
-
-    }
 }
 
 </script>
